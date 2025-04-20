@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starships Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome_screen" class="screen">
+        <img src="images/Game Logo.png" alt="Game Logo" class="logo">
+        <h1>Welcome to the Starships game</h1>
+        <p>Created by Guy and Dan.</p>
+        <button class="button" onclick="showScreen('sign_up_screen')">Sign Up</button>
+        <button class="button" onclick="showScreen('log_in_screen')">Log In</button>
+    </div>
+    
+    <!-- Log In Screen -->
+    <div id="log_in_screen" class="screen">
+        <h1>Log In</h1>
+        <form id="login-form" action="login.php" method="post">
+            <label for="login_username">Username:</label><br>
+            <input type="text" id="login_username" name="username" required><br>
+            <label for="login_password">Password:</label><br>
+            <input type="password" id="login_password" name="password" required><br>
+            <input type="submit" value="Log In">
+        </form>
+        <p>Don't have an account? <a href="#" onclick="showScreen('sign_up_screen')">Sign Up</a></p>
+        <button class="button" onclick="showScreen('welcome_screen')">Back</button>
+        <div id="login_error"></div>
+    </div>
+    
+    <!-- Sign Up Screen -->
+    <div id="sign_up_screen" class="screen">
+        <h1>Sign Up</h1>
+        <form id="signup-form" action="signup.php" method="post">
+            <label for="new_username">Username:</label>
+            <input type="text" id="new_username" name="new_username" required>
+            
+            <label for="new_password">Password:</label>
+            <input type="password" id="new_password" name="new_password" required>
+            
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+            
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" required>
+            
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="birthdate">Birthdate:</label>
+            <select id="birth_year" name="birth_year" required></select>
+            <select id="birth_month" name="birth_month" required></select>
+            <select id="birth_day" name="birth_day" required></select>
+            
+            <input type="submit" value="Sign Up">
+        </form>
+        <button class="button" onclick="showScreen('welcome_screen')">Back</button>
+        <div id="signup_error"></div>
+    </div>
+    
+    <!-- Configuration Screen -->
+    <div id="config_screen" class="screen" , style="display:none;">
+        <img src="images/Game Logo.png" alt="Game Logo" class="logo">
+        <h1>Game Configuration</h1>
+        <form id="config-form">
+            <label for="shoot-key">choose your shooting key</label>
+            <select id="shoot-key" name="shoot-key">
+                <option value="Space">space</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+                <option value="H">H</option>
+                <option value="I">I</option>
+                <option value="J">J</option>
+                <option value="K">K</option>
+                <option value="L">L</option>
+                <option value="M">M</option>
+                <option value="N">N</option>
+                <option value="O">O</option>
+                <option value="P">P</option>
+                <option value="Q">Q</option>
+                <option value="R">R</option>
+                <option value="S">S</option>
+                <option value="T">T</option>
+                <option value="U">U</option>
+                <option value="V">V</option>
+                <option value="W">W</option>
+                <option value="X">X</option>
+                <option value="Y">Y</option>
+                <option value="Z">Z</option>
+            </select>
+            
+            <label for="game-time">Duration of the game (in minutes):</label>
+            <input type="number" id="game-time" name="game-time" min="2" value="2">
+            <br>
+            <br>
+            <br>
+            <label for="ship-color">choose a color for the ship:</label>
+            <input type="color" id="ship-color" name="ship-color" value="#0000FF">
+            
+            <input type="button" class="button" value="Start Game" onclick="startGame()">
+        </form>
+        <button class="button" onclick="showScreen('welcome_screen')">Back</button>
+    </div>
+
+
+    <script>
+        // Function to show a specific screen
+        function showScreen(screenId) {
+            const screens = ['welcome_screen', 'log_in_screen', 'sign_up_screen', 'config_screen'];
+            screens.forEach(function(id) {
+                document.getElementById(id).style.display = (id === screenId) ? 'block' : 'none';
+            });
+        }
+        
+        // Populate birthdate select boxes
+        function populateBirthdate() {
+            const yearSelect = document.getElementById('birth_year');
+            const monthSelect = document.getElementById('birth_month');
+            const daySelect = document.getElementById('birth_day');
+            const currentYear = new Date().getFullYear();
+    
+            for (let y = currentYear; y >= 1900; y--) {
+                const option = document.createElement('option');
+                option.value = y;
+                option.textContent = y;
+                yearSelect.appendChild(option);
+            }
+            for (let m = 1; m <= 12; m++) {
+                const option = document.createElement('option');
+                option.value = m;
+                option.textContent = m;
+                monthSelect.appendChild(option);
+            }
+            for (let d = 1; d <= 31; d++) {
+                const option = document.createElement('option');
+                option.value = d;
+                option.textContent = d;
+                daySelect.appendChild(option);
+            }
+        }
+        
+        // Registration form client-side validation
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            let errorMsg = "";
+            const username = document.getElementById('new_username').value.trim();
+            const password = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const firstName = document.getElementById('first_name').value.trim();
+            const lastName = document.getElementById('last_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            
+            if (!username || !password || !confirmPassword || !firstName || !lastName || !email) {
+                errorMsg = "All fields must be filled.";
+            }
+            else if (!/(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}/.test(password)) {
+                errorMsg = "Password must be at least 8 characters, including letters and numbers.";
+            }
+            else if (password !== confirmPassword) {
+                errorMsg = "Password and confirmation do not match.";
+            }
+            else if (/\d/.test(firstName) || /\d/.test(lastName)) {
+                errorMsg = "First Name and Last Name should not contain numbers.";
+            }
+            else if (!/^\S+@\S+\.\S+$/.test(email)) {
+                errorMsg = "Invalid email format.";
+            }
+            
+            if(errorMsg !== ""){
+                e.preventDefault();
+                document.getElementById('signup_error').textContent = errorMsg;
+            }
+        });
+        
+        // Default user for login: username "p" with password "testuser"
+        const users = [
+            { username: "guy", password: "12345678" },
+            { username: "dan", password: "12345678" },
+            { username: "p", password: "testuser" }
+        ];
+        
+        // Login form validation and authentication
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('login_username').value.trim();
+            const password = document.getElementById('login_password').value;
+            const userFound = users.find(u => u.username === username && u.password === password);
+            if(userFound) {
+                // On successful login, show configuration screen
+                showScreen('config_screen');
+            } else {
+                document.getElementById('login_error').textContent = "Invalid username or password.";
+            }
+        });
+        
+        // Function to start the game (after configuration)
+        function startGame() {
+            // You can save the config values (e.g., localStorage or send them to game.html)
+            const shootKey = document.getElementById('shoot-key').value;
+            const gameTime = document.getElementById('game-time').value;
+            const shipColor = document.getElementById('ship-color').value;
+            // (Optional) Save in localStorage for use in the game page
+            localStorage.setItem('shootKey', shootKey);
+            localStorage.setItem('gameTime', gameTime);
+            localStorage.setItem('shipColor', shipColor);
+            // Redirect to game.html (or start the game logic here)
+            window.location.href = "game.html"; // Redirect to game page
+        }
+        
+        window.addEventListener('DOMContentLoaded', populateBirthdate);
+    </script>
+</body>
+</html>

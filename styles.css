@@ -1,0 +1,121 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Overall body style with gradient background */
+body {
+    background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+/* Container for screens */
+.screen {
+    background-color: #fff;
+    width: 360px;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.screen h1, .screen h2 {
+    margin-bottom: 0.5em;
+    color: #000DFF;
+}
+
+/* Logo animation and styling */
+.logo {
+    width: 250px;
+    animation: logoAnimation 3s ease-in-out infinite;
+    margin-bottom: 1em;
+}
+
+@keyframes logoAnimation {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1) rotate(10deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8) rotate(0deg);
+    }
+}
+
+/* Text styling */
+p {
+    margin-bottom: 1.5em;
+    color: #555;
+}
+
+/* Button styling */
+.button {
+    padding: 12px 25px;
+    margin: 0.5em;
+    font-size: 1rem;
+    background-color: #000DFF;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #3333FF;
+}
+
+/* Form elements */
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Form submit button */
+form input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #000DFF;
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+    background-color: #3333FF;
+}
+
+/* Error message */
+#error_message, #login_error, #signup_error {
+    color: red;
+    margin-top: 0.5em;
+}
+
+/* Hide screens by default */
+#log_in_screen, #sign_up_screen {
+    display: none;
+}
