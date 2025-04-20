@@ -14,6 +14,7 @@
         <p>Created by Guy and Dan.</p>
         <button class="button" onclick="showScreen('sign_up_screen')">Sign Up</button>
         <button class="button" onclick="showScreen('log_in_screen')">Log In</button>
+        <button id="openAbout" class="button">About</button>
     </div>
     
     <!-- Log In Screen -->
@@ -219,5 +220,46 @@
         
         window.addEventListener('DOMContentLoaded', populateBirthdate);
     </script>
+     
+     <!-- The About Modal -->
+     <div id="aboutModal" class="modal" style="display:none;">
+       <div class="modal-content">
+         <span class="close">&times;</span>
+         <h2>About</h2>
+         <p>We are Guy and Dan</p>
+         <p>We used a template</p>
+         <p>We did not use a jQuery plugin</p>
+       </div>
+     </div>
+     <script>
+        // Get modal elements
+        const modal = document.getElementById("aboutModal");
+        const openBtn = document.getElementById("openAbout");
+        const closeBtn = document.getElementsByClassName("close")[0];
+  
+        // Open the modal when button is clicked
+        openBtn.onclick = function() {
+            modal.style.display = "block";
+        };
+  
+        // Close the modal when the user clicks on the "X"
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        };
+  
+        // Close the modal when clicking outside the modal-content
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+  
+        // Close the modal when pressing the ESC key
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                modal.style.display = "none";
+            }
+        });
+      </script>
 </body>
 </html>
