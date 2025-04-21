@@ -60,8 +60,10 @@
             <select id="birth_day" name="birth_day" required></select>
             
             <input type="submit" value="Sign Up">
+            <p>Already have an account? <a href="#" onclick="showScreen('log_in_screen')">Log In</a></p>
         </form>
         <button class="button" onclick="showScreen('welcome_screen')">Back</button>
+        <!-- <button class="button" onclick="showScreen('welcome_screen')">sign up</button> -->
         <div id="signup_error"></div>
     </div>
     
@@ -181,6 +183,11 @@
                 e.preventDefault();
                 document.getElementById('signup_error').textContent = errorMsg;
             }
+            else {
+        // If no error, prevent normal submit and show the login screen.
+        e.preventDefault();
+        showScreen('log_in_screen');
+         }
         });
         
         // Default user for login: username "p" with password "testuser"
