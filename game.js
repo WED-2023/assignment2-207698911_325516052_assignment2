@@ -111,7 +111,7 @@ function initGame() {
     // Retrieve configuration values stored in localStorage from index.html
     const shootKey = localStorage.getItem('shootKey');
     const gameTime = localStorage.getItem('gameTime');
-    shipColor = localStorage.getItem('shipColor');
+    shipColor = localStorage.getItem('shipColor') || "white";
     canvas = document.getElementById("mycanvas");
     ctx = canvas.getContext("2d");
 
@@ -149,16 +149,6 @@ function draw() {
 
 
 
-window.addEventListener("keydown", (e) => {
-  if (!gameRunning) return;
-  if (e.key === "ArrowLeft") player.move(-1, 0);
-  if (e.key === "ArrowRight") player.move(1, 0);
-  if (e.key === "ArrowUp") player.move(0, -1);
-  if (e.key === "ArrowDown") player.move(0, 1);
-  if (e.key === " ") player.shoot();
-});
-
-
 function update(deltaTime) {
     // Move enemies
     let moveDown = false;
@@ -182,13 +172,6 @@ function update(deltaTime) {
     }
     playerBullets = playerBullets.filter(b => b.active);
     enemyBullets = enemyBullets.filter(b => b.active);
-  
-
-        // Enemy shooting
-  
-
-    // Collisions
-   // checkCollisions();
   
     // Speed up
     speedIncreaseTimer += deltaTime;
@@ -220,12 +203,31 @@ function gameLoop(timestamp) {
     update(deltaTime);
     handleEnemyShooting(timestamp);
     checkCollisions();
+    handleInput();
     gameElapsedTime += deltaTime;
     
     draw(); // inside draw() you can show aaa/bbb if you want
   
     requestAnimationFrame(gameLoop);
 }
+
+let keysPressed = {};
+window.addEventListener("keydown", (e) => {
+    if (!gameRunning) return;
+    keysPressed[e.key] = true;
+    if (e.key === " ") player.shoot(); // shooting still happens once
+  });
+  
+window.addEventListener("keyup", (e) => {
+    keysPressed[e.key] = false;
+  });
+
+function handleInput() {
+    if (keysPressed["ArrowLeft"]) player.move(-1, 0);
+    if (keysPressed["ArrowRight"]) player.move(1, 0);
+    if (keysPressed["ArrowUp"]) player.move(0, -1);
+    if (keysPressed["ArrowDown"]) player.move(0, 1);
+  }
 
 // === Collision Detection ===
 function checkCollisions() {
