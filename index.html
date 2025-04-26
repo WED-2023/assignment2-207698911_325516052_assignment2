@@ -34,6 +34,7 @@
     
     <!-- Sign Up Screen -->
     <div id="sign_up_screen" class="screen">
+        <img src="images/Game Logo.png" alt="Game Logo" class="logo">
         <h1>Sign Up</h1>
         <form id="signup-form" action="signup.php" method="post">
             <label for="new_username">Username:</label>
@@ -122,10 +123,26 @@
         function showScreen(screenId) {
             const screens = ['welcome_screen', 'log_in_screen', 'sign_up_screen', 'config_screen'];
             screens.forEach(function(id) {
-                document.getElementById(id).style.display = (id === screenId) ? 'block' : 'none';
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.display = (id === screenId) ? 'block' : 'none';
+                }
             });
+
+            // Scroll to top of page after screen is shown
+            requestAnimationFrame(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+    });
         }
-        
+
+                // Default user for login: username "p" with password "testuser"
+        users = [
+            { username: "guy", password: "12345678" },
+            { username: "dan", password: "12345678" },
+            { username: "p", password: "testuser" }
+        ];
         // Populate birthdate select boxes
         function populateBirthdate() {
             const yearSelect = document.getElementById('birth_year');
@@ -184,18 +201,13 @@
                 document.getElementById('signup_error').textContent = errorMsg;
             }
             else {
-        // If no error, prevent normal submit and show the login screen.
-        e.preventDefault();
-        showScreen('log_in_screen');
-         }
+            // If no error, prevent normal submit and show the login screen.
+            users.push({ username: username, password:password });
+            e.preventDefault();
+            showScreen('log_in_screen');
+            }
         });
         
-        // Default user for login: username "p" with password "testuser"
-        const users = [
-            { username: "guy", password: "12345678" },
-            { username: "dan", password: "12345678" },
-            { username: "p", password: "testuser" }
-        ];
         
         // Login form validation and authentication
         document.getElementById('login-form').addEventListener('submit', function(e) {

@@ -21,17 +21,23 @@ body {
 
 /* Container for screens */
 .screen {
-    background-color: #fff;
-    width: 360px;
+    display: none;                /* hidden by default */
+    width: 100%;
+    max-width: 600px;
+    margin: 500 auto;
     padding: 2em;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .screen h1, .screen h2 {
     margin-bottom: 0.5em;
     color: #000DFF;
+}
+
+#welcome_screen {
+    display: block;
 }
 
 /* Logo animation and styling */
