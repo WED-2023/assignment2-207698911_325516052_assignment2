@@ -18,7 +18,10 @@ body {
     align-items: center;
     color: #333;
 }
-
+body.game-page {
+    
+    color: #FFFF33;
+}
 /* Container for screens */
 .screen {
     display: none;                /* hidden by default */
