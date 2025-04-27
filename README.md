@@ -4,6 +4,7 @@
 
 Starships Game is a dynamic web-based arcade game developed by Guy (207698911) and Dan (325516052) for their assignment. The game combines modern aesthetics, engaging gameplay mechanics, and responsive design to create an immersive experience.
 
+link to the game : https://wed-2023.github.io/assignment2-207698911_325516052_assignment2/
 ## Table of Contents
 
 - [Project Features](#project-features)
@@ -97,9 +98,6 @@ assignment2-207698911_325516052_assignment2/
 
 Developed as part of an assignment project influenced by classic arcade games and modern web development techniques.
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ---
 
