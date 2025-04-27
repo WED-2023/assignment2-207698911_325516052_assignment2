@@ -357,16 +357,16 @@ function update(deltaTime) {
 let curtime=0;
 
 function gameLoop(timestamp) {
-    if(firstLoop)//
+  if (!gameRunning){
+    backgroundMusic.pause();
+    return;
+  }  
+  if(firstLoop)//
     {//timer
       backgroundMusic.play();
       curtime = timestamp/1000; //this is because i had trouble with thetimer
       firstLoop = false;//
     }//timer
-    if (!gameRunning){
-      backgroundMusic.pause();
-      return;
-    }
 
   
     const deltaTime = (timestamp - lastTime) / 1000;
@@ -464,7 +464,7 @@ async function checkCollisions() {
 
 
 initGame();
-requestAnimationFrame(gameLoop);
+startNewGame();
 
 function checkEnding(time){
   if (gameTime-time<0)
