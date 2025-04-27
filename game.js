@@ -22,6 +22,7 @@ let firstLoop = false;
 let backgroundMusic;
 let failSound;
 let explosionAudio;
+let canvasbackground;
 // === Constants ===
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGHT = 500;
@@ -233,6 +234,9 @@ function initGame() {
     backgroundMusic = document.getElementById('backgroundMusic');
     failSound = document.getElementById('failSound');
     explosionAudio = document.getElementById('hitSound');
+    canvasbackground = new Image();
+    canvasbackground.src = "images/canvasBackground.jpg"
+    
     firstLoop = true;
     // Display the retrieved values (for testing) 
     document.getElementById('output').innerText = 
@@ -250,6 +254,7 @@ function draw(time) {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); 
     ctx.fillStyle = "black";
     ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT);
+    ctx.drawImage(canvasbackground, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     player.draw(ctx);
     for (const enemy of enemies) {
       if (enemy.alive) enemy.draw(ctx);
