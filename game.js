@@ -19,7 +19,9 @@ let gameTime;
 let enemyYChange = 10;
 let enemyYchangeTime = 0;
 let firstLoop = false;
-
+let backgroundMusic;
+let failSound;
+let explosionAudio;
 // === Constants ===
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGHT = 500;
@@ -228,7 +230,9 @@ function initGame() {
     shipColor = localStorage.getItem('shipColor') || "white";
     canvas = document.getElementById("mycanvas");
     ctx = canvas.getContext("2d");
-
+    backgroundMusic = document.getElementById('backgroundMusic');
+    failSound = document.getElementById('failSound');
+    explosionAudio = document.getElementById('hitSound');
     firstLoop = true;
     // Display the retrieved values (for testing) 
     document.getElementById('output').innerText = 
@@ -345,14 +349,16 @@ let curtime=0;
 function gameLoop(timestamp) {
     if(firstLoop)//
     {//timer
+      backgroundMusic.play();
       curtime = timestamp/1000; //this is because i had trouble with thetimer
       firstLoop = false;//
     }//timer
-    if (!gameRunning) return;
-  
+    if (!gameRunning){
+      backgroundMusic.pause();
+      return;
+    }
     const deltaTime = (timestamp - lastTime) / 1000;
     lastTime = timestamp/1000;
-  
     update(deltaTime);
     handleEnemyShooting();
     checkCollisions();
@@ -385,12 +391,13 @@ function handleInput() {
   }
 
 // === Collision Detection ===
-function checkCollisions() {
+async function checkCollisions() {
     for (const bullet of playerBullets) {
       for (const enemy of enemies) {
         if (enemy.alive && isColliding(bullet, enemy)) {
           bullet.active = false;
           enemy.alive = false;
+          playExplosionSound()
           score += (enemy.row === 3 ? 5 : enemy.row === 2 ? 10 : enemy.row === 1 ? 15 : 20);
         }
       }
@@ -400,6 +407,7 @@ function checkCollisions() {
       if (isColliding(bullet, player)) {
         bullet.active = false;
         lives--;
+        failSound.play();
         player = new Player();
       }
     }
@@ -436,6 +444,10 @@ function checkCollisions() {
            a.y + a.height > b.y;
   }
 
+  function playExplosionSound() {
+    const clone = explosionAudio.cloneNode(true); // explosionAudio is your preloaded audio
+    clone.play();
+}
 initGame();
 requestAnimationFrame(gameLoop);
 
@@ -447,6 +459,26 @@ function checkEnding(time){
   if (score==250)
     endingChampion();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Ending when time runs out
