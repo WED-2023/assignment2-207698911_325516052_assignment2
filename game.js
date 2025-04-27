@@ -14,6 +14,8 @@ let speedUpCount = 0;
 let lastTime = 0;
 let enemyDirection = 1;
 let gameElapsedTime = 0;
+let shootKey;
+let gameTime;
 
 // === Constants ===
 const CANVAS_WIDTH = 500;
@@ -23,6 +25,7 @@ const PLAYER_SPEED = 5;
 const BULLET_SPEED = 7;
 const ENEMY_BULLET_SPEED = 4;
 const MAX_SPEEDUPS = 4;
+const PLAYER_COOLDOWN = 50;
 
 class Player {
     constructor() {
@@ -30,6 +33,7 @@ class Player {
       this.height = 40;
       this.x = Math.random() * (CANVAS_WIDTH - this.width);
       this.y = CANVAS_HEIGHT - this.height - 10;
+      this.cooldown = 0;
     }
   
     move(dx, dy) {
@@ -45,13 +49,21 @@ class Player {
     }
   
     shoot() {
-      playerBullets.push(new Bullet(this.x + this.width/2, this.y, -BULLET_SPEED, "player"));
+      if(this.cooldown == 0){
+        playerBullets.push(new Bullet(this.x + this.width/2, this.y, -BULLET_SPEED, "player"));
+        this.cooldown = PLAYER_COOLDOWN; 
+      }
     }
   
     draw(ctx) {
       ctx.fillStyle = shipColor;
       ctx.fillRect(this.x, this.y, this.width, this.height);
     }
+    update() {
+      if(this.cooldown>0)
+        this.cooldown = this.cooldown-1;
+    }
+
 }
 class Enemy {
     constructor(x, y, row) {
@@ -109,8 +121,8 @@ function createEnemies() {
 
 function initGame() {
     // Retrieve configuration values stored in localStorage from index.html
-    const shootKey = localStorage.getItem('shootKey');
-    const gameTime = localStorage.getItem('gameTime');
+    shootKey = localStorage.getItem('shootKey');
+    gameTime = localStorage.getItem('gameTime');
     shipColor = localStorage.getItem('shipColor') || "white";
     canvas = document.getElementById("mycanvas");
     ctx = canvas.getContext("2d");
@@ -151,6 +163,7 @@ function draw() {
 
 function update(deltaTime) {
     // Move enemies
+    player.update();
     let moveDown = false;
     for (const enemy of enemies) {
       if (!enemy.alive) continue;
