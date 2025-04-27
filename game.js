@@ -16,6 +16,8 @@ let enemyDirection = 1;
 let gameElapsedTime = 0;
 let shootKey;
 let gameTime;
+let enemyYChange = 10;
+let enemyYchangeTime = 0;
 
 // === Constants ===
 const CANVAS_WIDTH = 500;
@@ -26,7 +28,7 @@ const BULLET_SPEED = 7;
 const ENEMY_BULLET_SPEED = 4;
 const MAX_SPEEDUPS = 4;
 const PLAYER_COOLDOWN = 50;
-
+const ENEMY_SPEEDUP = 0.15;
 class Player {
     constructor() {
       this.width = 40;
@@ -116,8 +118,32 @@ class Enemy {
     }
   
     draw(ctx) {
+      ctx.save();
+
+      // Base color
       ctx.fillStyle = ["red", "orange", "yellow", "purple"][this.row];
-      ctx.fillRect(this.x, this.y, this.width, this.height);
+      this.drawRoundedRect(ctx, this.x, this.y, this.width, this.height, 8); // radius 8
+      ctx.fill();
+    
+      // Gloss effect
+      ctx.fillStyle = [ "orange", "yellow", "purple","red"][this.row]; // white with 20% opacity
+      this.drawRoundedRect(ctx, this.x+5, this.y+5, this.width-10, (this.height / 2)-5, 8); // only top half
+      ctx.fill();
+    
+      ctx.restore();
+    }
+    drawRoundedRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
     }
   }
   
@@ -147,6 +173,9 @@ class Enemy {
 
 }
 
+
+
+
 function createEnemies() {
     const offsetX = 100;
     const offsetY = 50;
@@ -161,8 +190,8 @@ function createEnemies() {
 
 function initGame() {
     // Retrieve configuration values stored in localStorage from index.html
-    shootKey = localStorage.getItem('shootKey');
-    gameTime = localStorage.getItem('gameTime');
+    shootKey = localStorage.getItem('shootKey') || " ";
+    gameTime = localStorage.getItem('gameTime')*60 || 120;
     shipColor = localStorage.getItem('shipColor') || "white";
     canvas = document.getElementById("mycanvas");
     ctx = canvas.getContext("2d");
@@ -179,7 +208,7 @@ function initGame() {
 
 
 // === Drawing ===
-function draw() {
+function draw(time) {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); 
     ctx.fillStyle = "black";
     ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -196,8 +225,19 @@ function draw() {
     ctx.font = "20px Arial";
     ctx.fillText(`Score: ${score}`, 10, 20);
     ctx.fillText(`Lives: ${lives}`, 10, 50);
+    ctx.fillText(`Time: ${formatTime(gameTime-time)}`, 10, 80);
   }
   
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    
+    // Pad with leading zeros if necessary
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+  
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
 
 
 
@@ -216,7 +256,13 @@ function update(deltaTime) {
     if (moveDown) {
       enemyDirection *= -1;
       for (const enemy of enemies) {
-        if (enemy.alive) enemy.y += 20;
+        if (enemy.alive) enemy.y += enemyYChange;
+      }
+      enemyYchangeTime = enemyYchangeTime + 1;
+      if (enemyYchangeTime ==5)
+      {
+        enemyYChange = -enemyYChange;
+        enemyYchangeTime=0;
       }
     }
   
@@ -230,7 +276,7 @@ function update(deltaTime) {
     // Speed up
     speedIncreaseTimer += deltaTime;
     if (speedIncreaseTimer >= 5 && speedUpCount < MAX_SPEEDUPS) {
-      enemySpeed += 0.5;
+      enemySpeed += ENEMY_SPEEDUP;
       speedIncreaseTimer = 0;
       speedUpCount++;
     }
@@ -271,7 +317,7 @@ function gameLoop(timestamp) {
     handleInput();
     gameElapsedTime += deltaTime;
     
-    draw(deltaTime); // inside draw() you can show aaa/bbb if you want
+    draw(timestamp/1000); 
   
     requestAnimationFrame(gameLoop);
 }
@@ -280,7 +326,7 @@ let keysPressed = {};
 window.addEventListener("keydown", (e) => {
     if (!gameRunning) return;
     keysPressed[e.key] = true;
-    if (e.key === " ") player.shoot(); // shooting still happens once
+   // if (e.key === " ") player.shoot(); // shooting still happens once
   });
   
 window.addEventListener("keyup", (e) => {
@@ -292,6 +338,8 @@ function handleInput() {
     if (keysPressed["ArrowRight"]) player.move(1, 0);
     if (keysPressed["ArrowUp"]) player.move(0, -1);
     if (keysPressed["ArrowDown"]) player.move(0, 1);
+    if (keysPressed[shootKey === "Space" ? " " : shootKey.toLowerCase()]) player.shoot();
+    if (keysPressed[shootKey.toUpperCase()]) player.shoot();
   }
 
 // === Collision Detection ===
