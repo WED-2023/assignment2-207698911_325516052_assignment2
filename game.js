@@ -56,8 +56,48 @@ class Player {
     }
   
     draw(ctx) {
-      ctx.fillStyle = shipColor;
-      ctx.fillRect(this.x, this.y, this.width, this.height);
+      this.draw_ship(ctx,shipColor)
+      // Overlay a white semi-transparent rectangle
+      if(this.cooldown != 0){
+
+        this.draw_ship(ctx,"rgba(255, 255, 255, 0.36)")
+      }
+      if(this.cooldown > 20){
+        this.draw_ship(ctx,"rgba(255, 255, 255, 0.36)")
+      }
+    }
+    draw_ship(ctx,color){
+      ctx.save(); // Save canvas state
+
+      ctx.fillStyle = color;
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 2;
+    
+      ctx.beginPath();
+    
+      // Nose of the ship (top middle)
+      ctx.moveTo(this.x + this.width / 2, this.y);
+    
+      // Left wing
+      ctx.lineTo(this.x, this.y + this.height * 0.7);
+    
+      // Center bottom
+      ctx.lineTo(this.x + this.width / 2, this.y + this.height);
+    
+      // Right wing
+      ctx.lineTo(this.x + this.width, this.y + this.height * 0.7);
+    
+      // Back to nose
+      ctx.closePath();
+    
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "lightblue";
+      ctx.beginPath();
+      ctx.arc(this.x + this.width / 2, this.y  , this.width * 0.1, 0, Math.PI * 2);
+      ctx.fill();
+    
+      ctx.restore(); // Restore canvas state
     }
     update() {
       if(this.cooldown>0)
@@ -162,7 +202,8 @@ function draw() {
 
 
 function update(deltaTime) {
-    // Move enemies
+
+
     player.update();
     let moveDown = false;
     for (const enemy of enemies) {
@@ -195,15 +236,26 @@ function update(deltaTime) {
     }
   }
 
-  function handleEnemyShooting(timestamp) {
-    if (timestamp - lastEnemyShotTime > 1000) { // 1 sec
+  function handleEnemyShooting() {
+    if (areAllEnemyBulletsBelow75()) {
       let shooters = enemies.filter(e => e.alive);
       if (shooters.length > 0) {
         let shooter = shooters[Math.floor(Math.random() * shooters.length)];
         enemyBullets.push(new Bullet(shooter.x + shooter.width/2, shooter.y + shooter.height, ENEMY_BULLET_SPEED, "enemy"));
-        lastEnemyShotTime = timestamp;
       }
     }
+  }
+
+  function areAllEnemyBulletsBelow75() {
+    const activeEnemyBullets = enemyBullets.filter(b => b.owner === "enemy" && b.active);
+  
+    for (const bullet of activeEnemyBullets) {
+      if (bullet.y < CANVAS_HEIGHT * 0.75) {
+        return false; // At least one bullet not far enough
+      }
+    }
+  
+    return true; // All bullets are far enough
   }
   
 
@@ -214,12 +266,12 @@ function gameLoop(timestamp) {
     lastTime = timestamp;
   
     update(deltaTime);
-    handleEnemyShooting(timestamp);
+    handleEnemyShooting();
     checkCollisions();
     handleInput();
     gameElapsedTime += deltaTime;
     
-    draw(); // inside draw() you can show aaa/bbb if you want
+    draw(deltaTime); // inside draw() you can show aaa/bbb if you want
   
     requestAnimationFrame(gameLoop);
 }
@@ -269,6 +321,30 @@ function checkCollisions() {
   }
   
   function isColliding(a, b) {
+    if (a instanceof Player) {
+      // Get triangle points of the player
+      const noseX = a.x + a.width / 2;
+      const noseY = a.y;
+      const leftWingX = a.x;
+      const leftWingY = a.y + a.height * 0.7;
+      const rightWingX = a.x + a.width;
+      const rightWingY = a.y + a.height * 0.7;
+  
+      // Check if any bullet corner is inside the triangle
+      const corners = [
+        {x: b.x, y: b.y},
+        {x: b.x + b.width, y: b.y},
+        {x: b.x, y: b.y + b.height},
+        {x: b.x + b.width, y: b.y + b.height}
+      ];
+  
+      for (const corner of corners) {
+        if (pointInTriangle(corner.x, corner.y, noseX, noseY, leftWingX, leftWingY, rightWingX, rightWingY)) {
+          return true;
+        }
+      }
+      return false;
+    }
     return a.x < b.x + b.width &&
            a.x + a.width > b.x &&
            a.y < b.y + b.height &&
