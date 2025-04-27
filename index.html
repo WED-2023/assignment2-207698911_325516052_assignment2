@@ -7,6 +7,27 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <img src="images/Game Logo.png" alt="Logo" style="height: 50px; vertical-align: middle;">
+        <span style="font-size: 24px; margin-left: 10px;">Starships Game</span>
+    </header> 
+
+        <!-- Menu -->
+    <nav >
+        <button onclick="showScreen('welcome_screen')">Home</button>
+        <button onclick="showScreen('log_in_screen')">Log In</button>
+        <button onclick="showScreen('sign_up_screen')">Sign Up</button>
+    </nav>
+
+    <footer>
+        <p>Contact us: Guy and Dan | Email: danzas@post.bgu.ac.il</p>
+    </footer>
+
+    <div class="banner">
+        <p>Welcome to the Game!</p>
+        <br>
+        <img src="images/gameshot.png">
+    </div>
     <!-- Welcome Screen -->
     <div id="welcome_screen" class="screen">
         <img src="images/Game Logo.png" alt="Game Logo" class="logo">
@@ -169,6 +190,19 @@
                 daySelect.appendChild(option);
             }
         }
+        window.addEventListener('scroll', function () {
+        const footer = document.querySelector('footer');
+        const documentHeight = document.documentElement.scrollHeight;
+        const viewportHeight = window.innerHeight;
+        const scrollPosition = window.scrollY;
+
+        // Check if user is at the bottom
+        if (scrollPosition + viewportHeight >= documentHeight - 10) {
+            footer.classList.add('show');
+        } else {
+            footer.classList.remove('show');
+        }
+        });
         
         // Registration form client-side validation
         document.getElementById('signup-form').addEventListener('submit', function(e) {

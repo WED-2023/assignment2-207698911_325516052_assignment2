@@ -17,7 +17,183 @@ body {
     justify-content: center;
     align-items: center;
     color: #333;
+    margin-top: 50px;
 }
+
+/* Styling for the left sidebar */
+nav {
+    position: fixed;          /* Fix the sidebar to the left */
+    top: 0;                   /* Align it to the top */
+    left: 0;                  /* Align it to the left */
+    height: 100%;             /* Make the sidebar extend full height */
+    width: 250px;             /* Set a fixed width for the sidebar */
+    background-color: #2c3e50; /* Dark background for the sidebar */
+    display: flex;
+    flex-direction: column;   /* Stack the buttons vertically */
+    justify-content: center;  /* Center the buttons vertically */
+    align-items: center;      /* Center the buttons horizontally */
+    padding: 20px;            /* Add padding inside the sidebar */
+    box-sizing: border-box;   /* Include padding in the width/height */
+}
+
+/* Styling for the buttons inside the navigation sidebar */
+nav button {
+    width: 100%;              /* Make buttons take full width of the sidebar */
+    padding: 15px;            /* Add padding inside each button */
+    font-size: 1.2rem;        /* Larger text size for the buttons */
+    background-color: #3498db; /* Light blue background */
+    color: white;
+    border: none;
+    border-radius: 10px;      /* Rounded corners */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px 0;           /* Space between buttons */
+}
+
+/* Hover effect - slightly lightens the button */
+nav button:hover {
+    background-color: #2980b9;
+    transform: translateX(5px); /* Push the button slightly to the right */
+}
+
+/* Focus effect for accessibility */
+nav button:focus {
+    outline: none;
+    box-shadow: 0 0 5px #3498db; /* Highlight on focus */
+}
+
+/* Active state - shrink and change background color */
+nav button:active {
+    background-color: #1c6694;
+    transform: translateX(2px); /* Button presses to the right */
+}
+
+/* Specific button styles */
+nav button:first-child {
+    background-color: #2ecc71; /* Green for Home */
+}
+
+nav button:first-child:hover {
+    background-color: #27ae60; /* Darker green on hover */
+}
+
+nav button:nth-child(2) {
+    background-color: #e74c3c; /* Red for Log In */
+}
+
+nav button:nth-child(2):hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
+nav button:nth-child(3) {
+    background-color: #f39c12; /* Orange for Sign Up */
+}
+
+nav button:nth-child(3):hover {
+    background-color: #e67e22; /* Darker orange on hover */
+}
+
+/* Right side banner */
+.banner {
+    position: fixed;              /* Fix the banner to the right */
+    top: 50%;                      /* Vertically center the banner */
+    right: 0;                      /* Align it to the right */
+    width: 250px;                  /* Set the banner width */
+    background-color: #34495e;     /* Dark color for the banner */
+    border-radius: 10px;           /* Rounded corners to match buttons */
+    padding: 20px;                 /* Padding inside the banner */
+    box-sizing: border-box;        /* Ensure padding is part of the width */
+    display: flex;
+    justify-content: center;       /* Center the content inside the banner */
+    align-items: center;           /* Center the content vertically */
+    transform: translateY(-50%);   /* Adjust to vertically center the banner */
+}
+
+/* Banner text styling */
+.banner p {
+    position: absolute;            /* Position the text on top of the image */
+    top: 10px;                     /* Adjust text position from the top */
+    left: 50%;                     /* Center the text horizontally */
+    transform: translateX(-50%);   /* Center it properly */
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1;                    /* Ensure text appears above the image */
+}
+.banner img {
+    width: 100%;                   /* Make image fill the width of the banner */
+    height: 100%;                  /* Make image fill the height of the banner */
+    object-fit: cover;             /* Scale the image without distorting it */
+    border-radius: 10px;           /* Match the rounded corners */
+}
+
+header {
+    background-color: #333;  /* Dark background for the header */
+    color: white;/* More padding for a larger header */
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+header img {
+    height: 80px; /* Make logo bigger */
+    margin-bottom: 10px;
+}
+
+header span {
+    font-size: 32px; /* Larger text for the app name */
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+nav {
+    background-color: #444;
+    padding: 10px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+nav button {
+    background-color: #000DFF;
+    color: white;
+    padding: 12px 25px;
+    margin: 5px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+nav button:hover {
+    background-color: #3333FF;
+}
+
+/* Footer styling */
+footer {
+    position: fixed;
+    bottom: -60px; /* Start off-screen */
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    transition: bottom 0.3s ease; /* Smooth transition */
+}
+
+footer.show {
+    bottom: 0; /* Show the footer at the bottom of the screen */
+}
+
+footer p {
+    margin: 0;
+    font-size: 1rem;
+}
+
 
 body.game-page {
     margin: 0;
