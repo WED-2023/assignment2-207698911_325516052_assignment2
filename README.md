@@ -1,42 +1,106 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/C1S6S1cK)
 
+# Starships Game
 
-1. Footer on Scroll
-The footer becomes visible only when the player scrolls down the page, creating a clean and dynamic user experience.
+Starships Game is a dynamic web-based arcade game developed by Guy (207698911) and Dan (325516052) for their assignment. The game combines modern aesthetics, engaging gameplay mechanics, and responsive design to create an immersive experience.
 
-2. Cooldown Mechanism for Player Shots
-A cooldown is implemented for the player's shooting ability. The cooldown indicator changes color based on the cooldown stage, providing visual feedback to the player about when they can shoot again.
+## Table of Contents
 
-3. Sound Effects for Enemy Kills
-Each time an enemy is killed, a sound is played. Multiple kill sounds can play simultaneously for more immersive gameplay.
+- [Project Features](#project-features)
+- [Bonus Features](#bonus-features)
+- [Design Patterns](#design-patterns)
+- [Installation & Usage](#installation--usage)
+- [Project Structure](#project-structure)
+- [Credits](#credits)
+- [License](#license)
 
-4. Background
-The game features a GIF background that adds a dynamic and visually appealing element to the game environment.
+## Project Features
 
-5. Player Hitbox
-The player's hitbox is designed as a triangle rather than the traditional square hitbox.
+1. **Footer on Scroll**  
+   The footer becomes visible only when the player scrolls down the page, ensuring a clean and dynamic user experience.
 
+2. **Cooldown Mechanism for Player Shots**  
+   A robust cooldown is implemented for the player's shooting ability. The cooldown indicator changes color based on its stage, offering clear visual feedback on when the player can shoot again.
 
-Bonus Features
-1. Enemy Movement
-Enemies move diagonally in a bobbing up-and-down motion.
+3. **Sound Effects for Enemy Kills**  
+   Every enemy kill triggers a sound effect. Multiple kill sounds can play simultaneously, enhancing the overall gameplay immersion.
 
-2. Player Movement
-The player can move diagonally with the help of multiple listeners for different movement directions.
+4. **Dynamic Background**  
+   The game features an animated GIF background that brings the game environment to life with a dynamic and visually appealing aesthetic.
 
-3. Diagonal Enemy Bullets
-All enemy bullets travel diagonally slightly (-1 to 1 in x times the enemy speed). One in five enemy bullets is specifically aimed at the player's current position going a complete diagnal.
+5. **Player Hitbox Design**  
+   Instead of a traditional square, the player's hitbox is designed as a triangle, providing a unique challenge and gameplay variation.
 
-4. Non-Diagonal Player Shots
-We found the game impossible to beat if the player shots are diagonal. it's a matter of giving the bullet creation function a number instead of 0 to make it also diagonal so we intentionally let it straight.
+## Bonus Features
 
+1. **Enemy Movement**  
+   Enemies move diagonally in a bobbing, up-and-down motion, adding unpredictability to the gameplay.
 
-Design Patterns
-The game follows these core design patterns:
+2. **Player Movement**  
+   The player can move diagonally through the use of multiple event listeners assigned for various movement directions.
 
-Game Loop: The main game loop updates the game state at regular intervals.
+3. **Diagonal Enemy Bullets**  
+   All enemy bullets travel diagonally by a slight offset (-1 to 1 times enemy speed). In every five enemy shots, one bullet is precisely aimed at the player's current position, introducing additional challenge.
 
-Update-Draw Design Pattern: The game logic is updated in each cycle, and rendering happens afterward, ensuring smooth transitions and animations.
+4. **Non-Diagonal Player Shots**  
+   To balance gameplay, player shots are intentionally kept straight, making it easier to hit targets compared to fully diagonal shooting. This design decision was made after discovering that diagonal shots made the game nearly unbeatable.
 
+## Design Patterns
 
+- **Game Loop:**  
+  The game loop continuously updates the game state at regular intervals, ensuring smooth gameplay transitions.
 
+- **Update-Draw Design Pattern:**  
+  The logic update and rendering (drawing) phases are clearly separated. This structure guarantees smooth animations and transitions throughout the game.
+
+## Installation & Usage
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/yourusername/assignment2-207698911_325516052_assignment2.git
+   ```
+
+2. **Navigate to the Project Directory:**
+
+   ```bash
+   cd assignment2-207698911_325516052_assignment2
+   ```
+
+3. **Open the Project:**  
+   Open `index.html` in your favorite web browser to see the welcome, sign up, and log in screens.
+
+4. **Game Play:**  
+   After signing in and configuring your game settings, click “Start Game” to be redirected to `game.html` where the main gameplay takes place.
+
+5. **About Modal:**  
+   Click the About button on the welcome screen to see detailed information about the project (development details, technologies used, challenges, etc.).
+
+## Project Structure
+
+```
+assignment2-207698911_325516052_assignment2/
+├── index.html            # Main entry point (Welcome, Log In, Sign Up, Config screens)
+├── game.html             # Gameplay interface with canvas, scores, and audio
+├── styles.css            # Modern CSS styles with animations
+├── game.js               # JavaScript with core game logic and interactivity
+├── images/               # Game Logo, background images, etc.
+├── sounds/               # Audio assets (background music, explosion, etc.)
+└── README.md             # This file
+```
+
+## Credits
+
+- **Developers:**  
+  - Guy (207698911)  
+  - Dan (325516052)
+
+Developed as part of an assignment project influenced by classic arcade games and modern web development techniques.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+*Enjoy playing Starships Game and feel free to provide feedback or contribute to the project!*
