@@ -184,7 +184,7 @@ class Enemy {
       if(owner=="enemy")
       {
         if(Math.random()>0.8)
-          this.speedX = BULLET_SPEED*(this.x-player.x)/(this.y-player.y);
+          this.speedX = 0.8*BULLET_SPEED*(this.x-player.x)/(this.y-player.y);
       }
       this.active = true;
     }
