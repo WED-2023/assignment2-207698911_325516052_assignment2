@@ -12,5 +12,27 @@
     <canvas id="mycanvas" width="500" height="500"></canvas>
     <!-- Load game.js after the content so that the element is already in the DOM -->
     <script src="game.js"></script>
+
+    <div id="lostMessage" class="endMessage" style="display:none;">
+        <h2>You Lost!</h2>
+        <button onclick="startNewGame()">Start New Game</button>
+    </div>
+
+    <div id="timeOutMessage" class="endMessage" style="display:none;">
+        <h2 id="timeOutText"></h2>
+        <button onclick="startNewGame()">Start New Game</button>
+    </div>
+
+    <div id="championMessage" class="endMessage" style="display:none;">
+        <h2>Champion!</h2>
+        <button onclick="startNewGame()">Start New Game</button>
+    </div>
+
+    <!-- Scoreboard -->
+    <div id="scoreboard" style="display:none;">
+        <h3>Your Score History:</h3>
+        <ul id="scoreHistoryList"></ul>
+    </div>
+
 </body>
 </html>

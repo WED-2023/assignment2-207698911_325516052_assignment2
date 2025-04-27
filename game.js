@@ -18,6 +18,7 @@ let shootKey;
 let gameTime;
 let enemyYChange = 10;
 let enemyYchangeTime = 0;
+let firstLoop = false;
 
 // === Constants ===
 const CANVAS_WIDTH = 500;
@@ -223,7 +224,7 @@ function initGame() {
     canvas = document.getElementById("mycanvas");
     ctx = canvas.getContext("2d");
 
-    
+    firstLoop = true;
     // Display the retrieved values (for testing) 
     document.getElementById('output').innerText = 
         `Shooting key: ${shootKey}\nGame time: ${gameTime}\nShip color: ${shipColor}`;
@@ -232,6 +233,7 @@ function initGame() {
     gameRunning = true;
 
 }
+
 
 
 // === Drawing ===
@@ -252,7 +254,9 @@ function draw(time) {
     ctx.font = "20px Arial";
     ctx.fillText(`Score: ${score}`, 10, 20);
     ctx.fillText(`Lives: ${lives}`, 10, 50);
-    ctx.fillText(`Time: ${formatTime(gameTime-time)}`, 10, 80);
+    ctx.fillText(`Time: ${formatTime(gameTime-time+curtime)}`, 10, 80);
+    
+    
   }
   
   function formatTime(seconds) {
@@ -331,22 +335,25 @@ function update(deltaTime) {
   
     return true; // All bullets are far enough
   }
-  
+let curtime=0;
 
 function gameLoop(timestamp) {
+    if(firstLoop)//
+    {//timer
+      curtime = timestamp/1000; //this is because i had trouble with thetimer
+      firstLoop = false;//
+    }//timer
     if (!gameRunning) return;
   
     const deltaTime = (timestamp - lastTime) / 1000;
-    lastTime = timestamp;
+    lastTime = timestamp/1000;
   
     update(deltaTime);
     handleEnemyShooting();
     checkCollisions();
     handleInput();
     gameElapsedTime += deltaTime;
-    
     draw(timestamp/1000); 
-  
     requestAnimationFrame(gameLoop);
     checkEnding(timestamp/1000);
 }
@@ -354,6 +361,7 @@ function gameLoop(timestamp) {
 let keysPressed = {};
 window.addEventListener("keydown", (e) => {
     if (!gameRunning) return;
+    e.preventDefault();
     keysPressed[e.key] = true;
    // if (e.key === " ") player.shoot(); // shooting still happens once
   });
@@ -387,12 +395,7 @@ function checkCollisions() {
       if (isColliding(bullet, player)) {
         bullet.active = false;
         lives--;
-        if (lives <= 0) {
-          gameRunning = false;
-          alert("Game Over!");
-        } else {
-          player = new Player(); // Reset player position
-        }
+        player = new Player();
       }
     }
   }
@@ -431,11 +434,90 @@ function checkCollisions() {
 initGame();
 requestAnimationFrame(gameLoop);
 
-// function checkEnding(){
-//   if (gameTime-time<0)
-//     endingTimeRunOut();
-//   if (lives<1)
-//     endingLivesOut();
-//   if (score==250)
-//     endingChampion();
-// }
+function checkEnding(time){
+  if (gameTime-time<0)
+    endingTimeRunOut();
+  if (lives<1)
+    endingLivesOut();
+  if (score==250)
+    endingChampion();
+}
+
+
+// Ending when time runs out
+function endingTimeRunOut() {
+  let resultMessage = '';
+  if (score < 100) {
+      resultMessage = `You can do better! Your score: ${score}`;
+  } else {
+      resultMessage = `Winner! Your score: ${score}`;
+  }
+  displayEndGameMessage('timeOutMessage', resultMessage);
+}
+
+// Ending when lives run out
+function endingLivesOut() {
+  displayEndGameMessage('lostMessage', 'You Lost!');
+}
+
+// Ending when all enemies are destroyed
+function endingChampion() {
+  displayEndGameMessage('championMessage', 'Champion!');
+}
+
+// Function to display the correct end game message
+function displayEndGameMessage(divId, message) {
+  gameRunning = false;
+  // Hide all ending messages
+  const endMessages = document.querySelectorAll('.endMessage');
+  endMessages.forEach(msg => msg.style.display = 'none');
+
+  // Show the correct message
+  const resultElement = document.getElementById(divId);
+  resultElement.style.display = 'block';
+
+  // If it's the timeout message, also update the message with the score
+  if (divId === 'timeOutMessage') {
+      document.getElementById('timeOutText').innerText = message;
+  }
+
+  // Add score to history
+  scoreHistory.push(score);
+  updateScoreHistory();
+}
+function updateScoreHistory() {
+  const scoreHistoryList = document.getElementById('scoreHistoryList');
+  scoreHistoryList.innerHTML = ''; // Clear current list
+
+  scoreHistory.forEach((score, index) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `Game ${index + 1}: ${score} points`;
+      scoreHistoryList.appendChild(listItem);
+  });
+}
+function startNewGame() {
+  // Reset variables for a new game
+  lives = 3;
+  score = 0;
+  gameTime = 120;  // Or whatever time value you'd like to start with
+  enemySpeed = 0.1;
+  speedIncreaseTimer = 0;
+  firstLoop = true;
+  speedUpCount = 0;
+  gameElapsedTime = 0;
+  enemyDirection = 1;
+  enemies = [];  // Reset the enemies array
+  playerBullets = [];  // Reset player bullets
+  enemyBullets = [];  // Reset enemy bullets
+  createEnemies();  // Re-create the enemies
+  player = new Player();  // Reinitialize the player
+  
+  gameRunning = true;
+
+  // Optionally: reset the UI or any other game state like score/history display
+  document.getElementById('output').innerText = 
+    `Shooting key: ${shootKey}\nGame time: ${gameTime}\nShip color: ${shipColor}`;
+
+  // Start the game loop
+  requestAnimationFrame(gameLoop);
+}
