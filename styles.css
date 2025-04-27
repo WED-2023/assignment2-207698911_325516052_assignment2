@@ -476,3 +476,11 @@ h2 {
         transform: translate(-50%, -50%) scale(1);
     }
 }
+
+/* Optional styling for the button container in the welcome screen */
+.welcome-buttons {
+    margin-top: 20px;  /* adds space between the links and buttons */
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
