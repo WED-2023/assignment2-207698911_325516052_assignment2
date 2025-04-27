@@ -9,7 +9,7 @@
 <body class="game-page">
     <audio id="backgroundMusic" src="sounds/background.mp3" loop></audio>
     <audio id="failSound" src="sounds/fail.mp3"></audio>
-    <audio id="hitSound" src="sounds\explosion.mp3"></audio>
+    <audio id="hitSound" src="sounds/explosion.mp3"></audio>
     <!-- Add an element with the id 'output' so game.js can print the message -->
     <div id="output"></div>
     <canvas id="mycanvas" width="500" height="500"></canvas>
@@ -27,14 +27,20 @@
     </div>
 
     <div id="championMessage" class="endMessage" style="display:none;">
-        <h2>Champion!</h2>
+        <h2>You WON! Champion!</h2>
         <button onclick="startNewGame()">Start New Game</button>
     </div>
+    <div id="newRecordMessage" class="endMessage" style="display:none;">
+        <h2></h2>
+    </div>
+    
 
     <!-- Scoreboard -->
-    <div id="scoreboard" style="display:none;">
-        <h3>Your Score History:</h3>
-        <ul id="scoreHistoryList"></ul>
+    <div id="scoreboard" >
+        <h3>Your Best Scores :</h3>
+        <ul id="scoreHistoryList">
+        </ul>
+        
     </div>
 
 </body>

@@ -4,6 +4,7 @@ let player;
 let enemies = [];
 let playerBullets = [];
 let enemyBullets = [];
+let scoreHistory = [0,0,0];
 let score = 0;
 let lives = 3;
 let gameRunning = false;
@@ -19,10 +20,7 @@ let gameTime;
 let enemyYChange = 10;
 let enemyYchangeTime = 0;
 let firstLoop = false;
-let backgroundMusic;
-let failSound;
-let explosionAudio;
-let canvasbackground;
+
 // === Constants ===
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGHT = 500;
@@ -182,11 +180,6 @@ class Enemy {
       this.speedY = speedY;
       this.speedX = speedX*(Math.random() * 2 - 1);
       this.owner = owner; // "player" or "enemy"
-      if(owner=="enemy")
-      {
-        if(Math.random()>0.8)
-          this.speedX = 0.8*BULLET_SPEED*(this.x-player.x)/(this.y-player.y);
-      }
       this.active = true;
     }
   
@@ -231,12 +224,7 @@ function initGame() {
     shipColor = localStorage.getItem('shipColor') || "white";
     canvas = document.getElementById("mycanvas");
     ctx = canvas.getContext("2d");
-    backgroundMusic = document.getElementById('backgroundMusic');
-    failSound = document.getElementById('failSound');
-    explosionAudio = document.getElementById('hitSound');
-    canvasbackground = new Image();
-    canvasbackground.src = "images/canvasBackground.jpg"
-    
+
     firstLoop = true;
     // Display the retrieved values (for testing) 
     document.getElementById('output').innerText = 
@@ -254,7 +242,6 @@ function draw(time) {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); 
     ctx.fillStyle = "black";
     ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT);
-    ctx.drawImage(canvasbackground, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     player.draw(ctx);
     for (const enemy of enemies) {
       if (enemy.alive) enemy.draw(ctx);
@@ -354,16 +341,14 @@ let curtime=0;
 function gameLoop(timestamp) {
     if(firstLoop)//
     {//timer
-      backgroundMusic.play();
       curtime = timestamp/1000; //this is because i had trouble with thetimer
       firstLoop = false;//
     }//timer
-    if (!gameRunning){
-      backgroundMusic.pause();
-      return;
-    }
+    if (!gameRunning) return;
+  
     const deltaTime = (timestamp - lastTime) / 1000;
     lastTime = timestamp/1000;
+  
     update(deltaTime);
     handleEnemyShooting();
     checkCollisions();
@@ -396,13 +381,12 @@ function handleInput() {
   }
 
 // === Collision Detection ===
-async function checkCollisions() {
+function checkCollisions() {
     for (const bullet of playerBullets) {
       for (const enemy of enemies) {
         if (enemy.alive && isColliding(bullet, enemy)) {
           bullet.active = false;
           enemy.alive = false;
-          playExplosionSound()
           score += (enemy.row === 3 ? 5 : enemy.row === 2 ? 10 : enemy.row === 1 ? 15 : 20);
         }
       }
@@ -412,7 +396,6 @@ async function checkCollisions() {
       if (isColliding(bullet, player)) {
         bullet.active = false;
         lives--;
-        failSound.play();
         player = new Player();
       }
     }
@@ -449,10 +432,6 @@ async function checkCollisions() {
            a.y + a.height > b.y;
   }
 
-  function playExplosionSound() {
-    const clone = explosionAudio.cloneNode(true); // explosionAudio is your preloaded audio
-    clone.play();
-}
 initGame();
 requestAnimationFrame(gameLoop);
 
@@ -464,26 +443,6 @@ function checkEnding(time){
   if (score==250)
     endingChampion();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // Ending when time runs out
@@ -524,19 +483,58 @@ function displayEndGameMessage(divId, message) {
   }
 
   // Add score to history
-  scoreHistory.push(score);
-  updateScoreHistory();
+  // scoreHistory.push(score);
+  updateScoreboard(score);
 }
-function updateScoreHistory() {
-  const scoreHistoryList = document.getElementById('scoreHistoryList');
-  scoreHistoryList.innerHTML = ''; // Clear current list
 
-  scoreHistory.forEach((score, index) => {
-      const listItem = document.createElement('li');
-      listItem.textContent = `Game ${index + 1}: ${score} points`;
-      scoreHistoryList.appendChild(listItem);
+function updateScoreboard(newScore) {
+  
+  // Optionally, if you want to keep only a limited number of scores overall, e.g., the last 10:
+  scoreHistory.sort((a, b) => a - b);
+  if(scoreHistory[scoreHistory.length-1] < newScore) {
+    displaynewRecord(newScore);
+  }
+  if(scoreHistory.length >= 3 && scoreHistory[0] < newScore) {
+    scoreHistory.shift(); // Remove the oldest score
+  scoreHistory.push(newScore); // Add the new score
+  }
+  scoreHistory.sort((a, b) => b - a);
+  
+  
+
+  
+  
+  // // Save updated history back to localStorage
+  // localStorage.setItem("scoreHistory", JSON.stringify(scoreHistory));
+  
+  // Update the displayed scoreboard
+  displayScoreboard();
+}
+
+// This function reads the last 3 scores and displays them in the scoreboard div.
+function displayScoreboard() {
+  // let scoreHistory = JSON.parse(localStorage.getItem("scoreHistory")) || [];
+  
+  // Get the last 3 scores (newest last, then reverse to show newest first)
+  // let recentScores = scoreHistory;
+  
+  const scoreHistoryList = document.getElementById("scoreHistoryList");
+  scoreHistoryList.innerHTML = ""; // Clear previous scores
+  scoreHistory.forEach(function(score) {
+       const li = document.createElement("li");
+      li.textContent = score;
+      scoreHistoryList.appendChild(li);
   });
 }
+function displaynewRecord(newScore) {
+  const newRecordElement = document.getElementById("newRecordMessage");
+  newRecordElement.style.display = "block";
+  newRecordElement.innerText = `New Record! Your score: ${newScore}`;
+  setTimeout(() => {
+    newRecordElement.style.display = "none";
+  }, 3000); // Hide after 3 seconds
+}
+
 function startNewGame() {
   // Reset variables for a new game
   lives = 3;
@@ -555,7 +553,8 @@ function startNewGame() {
   player = new Player();  // Reinitialize the player
   
   gameRunning = true;
-
+const endMessages = document.querySelectorAll('.endMessage');
+  endMessages.forEach(msg => msg.style.display = 'none'); // Hide all ending messages
   // Optionally: reset the UI or any other game state like score/history display
   document.getElementById('output').innerText = 
     `Shooting key: ${shootKey}\nGame time: ${gameTime}\nShip color: ${shipColor}`;
