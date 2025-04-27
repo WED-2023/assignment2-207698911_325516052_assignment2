@@ -570,7 +570,6 @@ function startNewGame() {
   // Reset variables for a new game
   lives = 3;
   score = 0;
-  gameTime = 120;  // Or whatever time value you'd like to start with
   enemySpeed = 0.1;
   speedIncreaseTimer = 0;
   firstLoop = true;
