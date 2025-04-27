@@ -1,1 +1,16 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/C1S6S1cK)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ move diagnolly, player moves diagnolly, all enemy bullets are slight diagnal and 1 in 5 bullets will be aimed at the player

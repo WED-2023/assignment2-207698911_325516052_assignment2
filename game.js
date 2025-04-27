@@ -179,6 +179,11 @@ class Enemy {
       this.speedY = speedY;
       this.speedX = speedX*(Math.random() * 2 - 1);
       this.owner = owner; // "player" or "enemy"
+      if(owner=="enemy")
+      {
+        if(Math.random()>0.8)
+          this.speedX = BULLET_SPEED*(this.x-player.x)/(this.y-player.y);
+      }
       this.active = true;
     }
   
