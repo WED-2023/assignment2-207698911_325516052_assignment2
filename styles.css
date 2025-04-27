@@ -18,10 +18,26 @@ body {
     align-items: center;
     color: #333;
 }
+
 body.game-page {
-    
+    margin: 0;
+    height: 100vh;
     color: #FFFF33;
-}
+    background-color: #000042; /* Dark blue background as fallback */
+    background-image: url('images/stars_backgrond.gif'); /* Your GIF path */
+    background-size: cover; /* Ensure the GIF covers the whole body */
+    background-position: center; /* Center the GIF */
+    background-repeat: no-repeat; /* Don't repeat the GIF */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+#mycanvas {
+    width: 500px;
+    height: 500px;
+    background-color: #111;  /* Dark canvas background for the game */
+    border: 5px solid #444;
+  }
 /* Container for screens */
 .screen {
     display: none;                /* hidden by default */

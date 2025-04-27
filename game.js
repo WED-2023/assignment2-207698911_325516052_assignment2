@@ -348,6 +348,7 @@ function gameLoop(timestamp) {
     draw(timestamp/1000); 
   
     requestAnimationFrame(gameLoop);
+    checkEnding(timestamp/1000);
 }
 
 let keysPressed = {};
@@ -429,3 +430,12 @@ function checkCollisions() {
 
 initGame();
 requestAnimationFrame(gameLoop);
+
+// function checkEnding(){
+//   if (gameTime-time<0)
+//     endingTimeRunOut();
+//   if (lives<1)
+//     endingLivesOut();
+//   if (score==250)
+//     endingChampion();
+// }
