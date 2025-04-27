@@ -52,7 +52,7 @@ class Player {
   
     shoot() {
       if(this.cooldown == 0){
-        playerBullets.push(new Bullet(this.x + this.width/2, this.y, -BULLET_SPEED, "player"));
+        playerBullets.push(new Bullet(this.x + this.width/2, this.y, -BULLET_SPEED,0, "player"));
         this.cooldown = PLAYER_COOLDOWN; 
       }
     }
@@ -115,8 +115,19 @@ class Enemy {
       this.y = y;
       this.row = row;
       this.alive = true;
+      this.bobing_factor = Math.random()*10; //how much it moves up and down
+      this.bobing_completion = 0;
+      this.bobing_direction = 1;
     }
-  
+    bob(){
+      this.y+=(this.bobing_direction*this.bobing_factor)/10;
+      this.bobing_completion+=1;
+      if(this.bobing_completion==10) 
+      {
+        this.bobing_direction = -this.bobing_direction;
+        this.bobing_completion = 0;
+      }
+    }
     draw(ctx) {
       ctx.save();
 
@@ -126,8 +137,19 @@ class Enemy {
       ctx.fill();
     
       // Gloss effect
-      ctx.fillStyle = [ "orange", "yellow", "purple","red"][this.row]; // white with 20% opacity
+      ctx.fillStyle = "black"; // white with 20% opacity
       this.drawRoundedRect(ctx, this.x+5, this.y+5, this.width-10, (this.height / 2)-5, 8); // only top half
+      ctx.fill();
+
+      ctx.fillStyle = "white";
+      ctx.beginPath();
+      ctx.arc(this.x + this.width / 3, this.y  , this.width * 0.1, 0, Math.PI * 2);
+      ctx.fill();
+
+      
+      ctx.fillStyle = "white";
+      ctx.beginPath();
+      ctx.arc(this.x + (this.width / 3)*2, this.y  , this.width * 0.1, 0, Math.PI * 2);
       ctx.fill();
     
       ctx.restore();
@@ -148,12 +170,13 @@ class Enemy {
   }
   
   class Bullet {
-    constructor(x, y, speedY, owner) {
+    constructor(x, y, speedY,speedX, owner) {
       this.x = x;
       this.y = y;
       this.width = 5;
       this.height = 10;
       this.speedY = speedY;
+      this.speedX = speedX*(Math.random() * 2 - 1);
       this.owner = owner; // "player" or "enemy"
       this.active = true;
     }
@@ -161,6 +184,10 @@ class Enemy {
     update() {
       this.y += this.speedY;
       if (this.y < 0 || this.y > CANVAS_HEIGHT) {
+        this.active = false;
+      }
+      this.x += this.speedX;
+      if (this.x < 0 || this.x > CANVAS_WIDTH) {
         this.active = false;
       }
     }
@@ -248,6 +275,7 @@ function update(deltaTime) {
     let moveDown = false;
     for (const enemy of enemies) {
       if (!enemy.alive) continue;
+      enemy.bob()
       enemy.x += enemySpeed * enemyDirection;
       if (enemy.x <= 0 || enemy.x + enemy.width >= CANVAS_WIDTH) {
         moveDown = true;
@@ -287,7 +315,7 @@ function update(deltaTime) {
       let shooters = enemies.filter(e => e.alive);
       if (shooters.length > 0) {
         let shooter = shooters[Math.floor(Math.random() * shooters.length)];
-        enemyBullets.push(new Bullet(shooter.x + shooter.width/2, shooter.y + shooter.height, ENEMY_BULLET_SPEED, "enemy"));
+        enemyBullets.push(new Bullet(shooter.x + shooter.width/2, shooter.y + shooter.height, ENEMY_BULLET_SPEED,enemySpeed, "enemy"));
       }
     }
   }
